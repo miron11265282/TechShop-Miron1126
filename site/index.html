@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>miron1126 TechShop — игра про ремонт компьютеров</title>
+<meta name="description" content="miron1126 TechShop — игра про ремонт компьютеров от miron1126. Чини ПК с 1995 по 2026 год, ставь Windows, лови вирусы, открой свой компьютерный клуб.">
+<meta name="author" content="miron1126">
+<meta property="og:title" content="miron1126 TechShop">
+<meta property="og:description" content="Почини. Собери. Разгони. Игра про ремонт компьютеров от miron1126.">
+<meta property="og:image" content="img/pc2024.jpg">
+<style>
+:root{--bg:#0b0c0f;--fg:#f2f4f7;--dim:#9aa3ad;--acc:#ff8a1f;--card:#15171c}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:Inter,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.5;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;gap:22px;padding:14px 5vw;background:rgba(11,12,15,.72);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06)}
+nav .logo{font-weight:900;font-size:18px;display:flex;align-items:center;gap:10px}
+nav .logo i{width:28px;height:28px;border-radius:8px;background:var(--acc);display:grid;place-items:center;color:#1a1205;font-style:normal;font-weight:900}
+nav .sp{flex:1}
+nav a.l{color:var(--dim);font-size:14px}
+nav a.l:hover{color:var(--fg)}
+.btn{display:inline-block;padding:12px 22px;border-radius:999px;font-weight:700;font-size:15px;transition:.2s}
+.btn.p{background:var(--acc);color:#1a1205}
+.btn.p:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,138,31,.35)}
+.btn.s{border:1px solid rgba(255,255,255,.2)}
+.btn.s:hover{background:rgba(255,255,255,.06)}
+header{min-height:100vh;display:grid;place-items:center;text-align:center;padding:120px 5vw 60px;position:relative}
+header:before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 70% 20%,rgba(255,138,31,.18),transparent),radial-gradient(50% 40% at 15% 80%,rgba(74,159,240,.12),transparent);z-index:-1}
+h1{font-size:clamp(46px,9vw,120px);font-weight:900;letter-spacing:-.04em;line-height:.95}
+h1 span{color:var(--acc)}
+.tag{font-size:clamp(20px,3vw,32px);font-weight:700;margin-top:18px}
+.lead{color:var(--dim);max-width:640px;margin:16px auto 30px;font-size:18px}
+.hero-img{margin-top:50px;width:min(1100px,92vw);border-radius:22px;box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);transform:perspective(1200px) rotateX(8deg);transition:transform .6s}
+.hero-img:hover{transform:perspective(1200px) rotateX(0)}
+section{padding:110px 5vw;max-width:1200px;margin:0 auto}
+h2{font-size:clamp(34px,5vw,60px);font-weight:900;letter-spacing:-.03em;line-height:1.05}
+h2 span{color:var(--acc)}
+.sub{color:var(--dim);font-size:19px;margin-top:12px;max-width:700px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:44px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:26px;transition:.3s}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,138,31,.4)}
+.card b{display:block;font-size:20px;margin:10px 0 6px}
+.card p{color:var(--dim);font-size:15px}
+.ico{width:44px;height:44px;border-radius:12px;background:rgba(255,138,31,.14);display:grid;place-items:center;font-size:22px}
+.shot{width:100%;border-radius:18px;margin-top:40px;box-shadow:0 30px 80px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.06)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:40px}
+.two img{width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.06)}
+.eras{display:flex;gap:12px;overflow-x:auto;margin-top:40px;padding-bottom:10px;scroll-snap-type:x mandatory}
+.era{min-width:220px;scroll-snap-align:start;border-radius:20px;padding:22px;background:var(--card);border:1px solid rgba(255,255,255,.06)}
+.era .y{font-size:42px;font-weight:900}
+.era p{color:var(--dim);font-size:14px}
+.busya{display:grid;grid-template-columns:200px 1fr;gap:40px;align-items:center}
+.cat{width:200px;height:200px;cursor:pointer;transition:transform .2s}
+.cat:active{transform:scale(.94)}
+.meow{color:var(--acc);font-weight:700;min-height:26px;margin-top:10px}
+.dl{text-align:center}
+.dl .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}
+footer{padding:50px 5vw;color:var(--dim);font-size:14px;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+.reveal{opacity:0;transform:translateY(30px);transition:1s cubic-bezier(.2,.7,.2,1)}
+.reveal.on{opacity:1;transform:none}
+@media(max-width:720px){nav a.l{display:none}.two{grid-template-columns:1fr}.busya{grid-template-columns:1fr;text-align:center}.cat{margin:0 auto}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="#"><i>m</i>miron1126 TechShop</a>
+  <span class="sp"></span>
+  <a class="l" href="#features">Возможности</a>
+  <a class="l" href="#eras">Эпохи</a>
+  <a class="l" href="#busya">Буся</a>
+  <a class="btn p" href="#download">Скачать</a>
+</nav>
+
+<header>
+  <div>
+    <h1>miron1126<br><span>TechShop</span></h1>
+    <div class="tag">Почини. Собери. Разгони.</div>
+    <p class="lead">Игра про ремонт компьютеров. Начни в 1995 году с Pentium 75 в своей комнате — дойди до небоскрёба в 2026-м.</p>
+    <a class="btn p" href="#download">Скачать бесплатно</a>
+    <a class="btn s" href="play/">Играть в браузере</a>
+    <img class="hero-img" src="img/pc2024.jpg" alt="Рабочее место в TechShop: открытый ПК и монитор с игрой">
+  </div>
+</header>
+
+<section id="features">
+  <h2 class="reveal">Как настоящая<br><span>мастерская.</span></h2>
+  <p class="sub reveal">Каждый компьютер нарисован в разрезе. Детали перетаскиваешь прямо в корпус, на мониторе — то, что реально происходит с ПК.</p>
+  <div class="grid">
+    <div class="card reveal"><div class="ico">🔧</div><b>Железо своей эпохи</b><p>Процессоры, платы, память EDO…DDR5, видеокарты от S3 Trio до RTX. Сокеты, шины и разъёмы должны подходить.</p></div>
+    <div class="card reveal"><div class="ico">💿</div><b>Установка систем</b><p>Записывай флешку в Rufus, настраивай BIOS и UEFI, ставь DOS, Windows 95…11 и Linux. Не забудь бэкап!</p></div>
+    <div class="card reveal"><div class="ico">🐞</div><b>Вирусы</b><p>Лови вирусы антивирусом или вручную: диспетчер задач, автозагрузка, командная строка.</p></div>
+    <div class="card reveal"><div class="ico">🎮</div><b>Игры и FPS</b><p>Ставь игры, проверяй FPS на мониторе — от DOOM II до Cyberpunk. Разгоняй и чисти, чтобы не лагало.</p></div>
+    <div class="card reveal"><div class="ico">🏢</div><b>Свой бизнес</b><p>Комната → гараж → магазин → офис → небоскрёб. Нанимай работников, покупай верстаки.</p></div>
+    <div class="card reveal"><div class="ico">🕹️</div><b>Компьютерный клуб</b><p>Хит каждой эпохи, турниры, бар, консоли и VR-зона.</p></div>
+  </div>
+  <img class="shot reveal" src="img/desk.jpg" alt="Сесть за компьютер клиента: почта и диспетчер задач">
+</section>
+
+<section id="eras">
+  <h2 class="reveal">32 года истории<br><span>компьютеров.</span></h2>
+  <p class="sub reveal">20 дней — это год. Каждый год выходит новое железо, системы и игры.</p>
+  <div class="eras">
+    <div class="era"><div class="y">1995</div><p>Windows 95, Pentium 75, бежевые корпуса и ЭЛТ.</p></div>
+    <div class="era"><div class="y">2001</div><p>Windows XP, AGP, первые вирусы-черви.</p></div>
+    <div class="era"><div class="y">2007</div><p>Vista и Aero, двухъядерники, ЖК-мониторы.</p></div>
+    <div class="era"><div class="y">2012</div><p>Плитки Windows 8, SSD, UEFI.</p></div>
+    <div class="era"><div class="y">2021</div><p>Windows 11, TPM, RGB везде.</p></div>
+    <div class="era"><div class="y">2026</div><p>Небоскрёб miron1126 и вид на Техноград.</p></div>
+  </div>
+  <div class="two">
+    <img class="reveal" src="img/pc1996.jpg" alt="1996 год">
+    <img class="reveal" src="img/club.jpg" alt="Компьютерный клуб">
+  </div>
+  <img class="shot reveal" src="img/city.jpg" alt="Город Техноград">
+</section>
+
+<section id="busya">
+  <div class="busya">
+    <svg class="cat" viewBox="0 0 200 200" id="cat" aria-label="Кошка Буся — погладь">
+      <circle cx="100" cy="120" r="62" fill="#6b6f76"/>
+      <ellipse cx="100" cy="140" rx="36" ry="40" fill="#f3f3f3"/>
+      <polygon points="48,82 58,30 88,64" fill="#6b6f76"/><polygon points="152,82 142,30 112,64" fill="#6b6f76"/>
+      <polygon points="56,74 62,44 80,64" fill="#f2a6b6"/><polygon points="144,74 138,44 120,64" fill="#f2a6b6"/>
+      <circle cx="100" cy="92" r="46" fill="#6b6f76"/>
+      <ellipse cx="82" cy="88" rx="9" ry="11" fill="#f5c542"/><ellipse cx="118" cy="88" rx="9" ry="11" fill="#f5c542"/>
+      <ellipse cx="82" cy="89" rx="3" ry="9" fill="#222" id="e1"/><ellipse cx="118" cy="89" rx="3" ry="9" fill="#222" id="e2"/>
+      <path d="M95 104 L105 104 L100 110 Z" fill="#f2a6b6"/>
+      <path d="M100 110 Q92 118 86 113 M100 110 Q108 118 114 113" stroke="#333" stroke-width="2" fill="none"/>
+    </svg>
+    <div>
+      <h2 class="reveal">Знакомьтесь,<br><span>Буся.</span></h2>
+      <p class="sub">Буся — моя племянница и главный помощник мастерской. Погладь её по голове, а за вкусняшку она подскажет, что сломалось.</p>
+      <div class="meow" id="meow">Нажми на Бусю</div>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="dl">
+  <h2 class="reveal">Версия 2.0.0<br><span>«Перезагрузка».</span></h2>
+  <p class="sub reveal" style="margin:12px auto 0">Бесплатно. Windows, Linux, Android, macOS и прямо в браузере.</p>
+  <div class="row">
+    <a class="btn p" href="https://github.com/miron11265282/TechShop-Miron1126/releases/latest">Windows</a>
+    <a class="btn s" href="https://github.com/miron11265282/TechShop-Miron1126/releases/latest">Android (APK)</a>
+    <a class="btn s" href="https://github.com/miron11265282/TechShop-Miron1126/releases/latest">Linux</a>
+    <a class="btn s" href="https://github.com/miron11265282/TechShop-Miron1126/releases/latest">macOS</a>
+    <a class="btn s" href="play/">Играть в браузере</a>
+  </div>
+</section>
+
+<footer>
+  Сделано <b>miron1126</b> · талисман — кошка Буся ·
+  <a href="https://github.com/miron11265282">GitHub</a> ·
+  <a href="https://t.me/Claude_Coding_Miron1126">Telegram</a> ·
+  <a href="https://www.youtube.com/@Miron11265">YouTube</a><br>
+  Названия игр и систем упомянуты только текстом и принадлежат их владельцам.
+</footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const meows=["Мяу! (перевод: ещё!)","Мур-мур (перевод: почисти пыль в ПК)","Мяу? (перевод: где вкусняшка?)","Мррр (перевод: Windows 95 — классика)","Мяу! (перевод: не открывай вложения от незнакомцев)"];
+let n=0;
+document.getElementById('cat').addEventListener('click',()=>{
+  document.getElementById('meow').textContent=meows[n++%meows.length];
+  document.querySelectorAll('#e1,#e2').forEach(e=>{e.setAttribute('ry','2');setTimeout(()=>e.setAttribute('ry','9'),180)});
+});
+document.addEventListener('mousemove',ev=>{
+  const c=document.getElementById('cat').getBoundingClientRect();
+  const dx=Math.max(-3,Math.min(3,(ev.clientX-(c.left+c.width/2))/80));
+  document.getElementById('e1').setAttribute('cx',82+dx);document.getElementById('e2').setAttribute('cx',118+dx);
+});
+</script>
+</body>
+</html>

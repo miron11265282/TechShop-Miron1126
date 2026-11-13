@@ -1,0 +1,7 @@
+Шрифты в этой папке:
+
+Inter (Inter-*.otf, InterDisplay-*.otf) — автор Rasmus Andersson, https://rsms.me/inter/
+Лицензия: SIL Open Font License 1.1 (https://openfontlicense.org)
+
+DejaVu Sans Mono — DejaVu fonts team, https://dejavu-fonts.github.io/
+Лицензия: свободная лицензия Bitstream Vera / DejaVu (public domain changes)
