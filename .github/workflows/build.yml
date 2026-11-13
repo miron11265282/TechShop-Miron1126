@@ -1,0 +1,101 @@
+# Сборка miron1126 TechShop: Windows, Linux, Web, Android (APK), macOS.
+# Запускается при пуше тега v* (например v2.0.0) или вручную (Actions → Build → Run workflow).
+name: Build
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: 4.3
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: "Windows Desktop"
+            out: build/windows
+            file: TechShop.exe
+          - preset: "Linux"
+            out: build/linux
+            file: TechShop.x86_64
+          - preset: "Web"
+            out: build/web
+            file: index.html
+          - preset: "Android"
+            out: build/android
+            file: TechShop.apk
+          - preset: "macOS"
+            out: build/macos
+            file: TechShop.zip
+    steps:
+      - uses: actions/checkout@v4
+      - name: Шаблоны экспорта
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable || true
+      - name: Android debug keystore
+        if: matrix.preset == 'Android'
+        run: |
+          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999
+          mkdir -p ~/.config/godot
+          echo '[gd_resource type="EditorSettings" format=3]' > ~/.config/godot/editor_settings-4.3.tres
+          echo '[resource]' >> ~/.config/godot/editor_settings-4.3.tres
+          echo "export/android/android_sdk_path = \"/usr/lib/android-sdk\"" >> ~/.config/godot/editor_settings-4.3.tres
+          echo "export/android/debug_keystore = \"$GITHUB_WORKSPACE/debug.keystore\"" >> ~/.config/godot/editor_settings-4.3.tres
+          echo 'export/android/debug_keystore_user = "androiddebugkey"' >> ~/.config/godot/editor_settings-4.3.tres
+          echo 'export/android/debug_keystore_pass = "android"' >> ~/.config/godot/editor_settings-4.3.tres
+      - name: Экспорт ${{ matrix.preset }}
+        working-directory: game
+        run: |
+          mkdir -p ${{ matrix.out }}
+          godot --headless --verbose --export-release "${{ matrix.preset }}" ${{ matrix.out }}/${{ matrix.file }} || godot --headless --export-debug "${{ matrix.preset }}" ${{ matrix.out }}/${{ matrix.file }}
+      - name: Упаковка
+        working-directory: game/${{ matrix.out }}
+        run: |
+          apt-get update -qq && apt-get install -y -qq zip > /dev/null || true
+          zip -r ../../TechShop-${{ matrix.preset == 'Windows Desktop' && 'Windows' || matrix.preset }}.zip .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TechShop-${{ matrix.preset == 'Windows Desktop' && 'Windows' || matrix.preset }}
+          path: game/TechShop-*.zip
+      - name: Релиз на GitHub
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: game/TechShop-*.zip
+          name: "miron1126 TechShop ${{ github.ref_name }} «Перезагрузка»"
+
+  pages:
+    # Сайт из папки site/ + веб-версия игры в site/play
+    needs: export
+    runs-on: ubuntu-latest
+    if: always()
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: TechShop-Web
+          path: web
+        continue-on-error: true
+      - run: |
+          mkdir -p site/play
+          if [ -f web/TechShop-Web.zip ]; then unzip -o web/TechShop-Web.zip -d site/play; fi
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - uses: actions/deploy-pages@v4
